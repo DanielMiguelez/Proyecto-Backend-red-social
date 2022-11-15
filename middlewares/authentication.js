@@ -8,7 +8,7 @@ const authentication = async (req, res, next) => {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findOne({ _id: payload._id, tokens: token });
     if (!user) {
-      return res.status(401).send({ message: "No estas autorizado" });
+      return res.status(401).send({ message: "You do not have the authorization" });
     }
     req.user = user;
 
@@ -18,7 +18,7 @@ const authentication = async (req, res, next) => {
 
     return res
       .status(500)
-      .send({ error, message: "Ha habido un problema con el token" });
+      .send({ error, message: "There was a problem with the token" });
   }
 };
 

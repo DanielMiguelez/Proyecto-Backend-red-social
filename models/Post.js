@@ -4,11 +4,11 @@ const PostSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "Por favor rellena el titulo del post"],
+      required: [true, "Please fill in the name"],
     },
     body: {
       type: String,
-      required: [true, "Por favor rellena la descripcion"],
+      required: [true, "Please fill in the body"],
     },
     userId: {
       type: ObjectId,

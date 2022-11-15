@@ -5,21 +5,21 @@ const UserSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "Por favor rellena tu nombre"],
+      required: [true, "Please fill in with your name"],
     },
     email: {
       type: String,
-      match: [/.+\@.+\..+/, "Este correo no es válido"],
+      match: [/.+\@.+\..+/, "Email invalid"],
       unique: true,
-      required: [true, "Por favor rellena tu correo"],
+      required: [true, "Please fill in with your email"],
     },
     password: {
       type: String,
-      required: [true, "Por favor rellena tu contraseña"],
+      required: [true, "Please fill in with your password"],
     },
     age: {
       type: Number,
-      required: [true, "Por favor rellena tu edad"],
+      required: [true, "Please fill in with your age"],
     },
     tokens: [],
     postIds: [{ type: ObjectId, ref: "Post" }],
