@@ -14,7 +14,7 @@ const UserController = {
       res.status(201).send({ msg: "user succesfully created", user });
     } catch (error) {
       console.error(error);
-      next(error);
+      next(error);  
     }
   },
 
@@ -56,6 +56,34 @@ const UserController = {
       res.send(user);
     } catch (error) {
       console.error(error);
+    }
+  },
+  async getUsersById(req, res) {
+    try {
+      const user = await User.findById(req.params._id);
+      res.send(user);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({
+        msg: "Ha habido un problema al traernosel user por Id",
+        error,
+      });
+    }
+  },
+  async getUsersByName(req, res) {
+    try {
+      const users = await User.find({
+        $text: {
+          $search: req.params.name,
+        },
+      });
+      res.send(users);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({
+        msg: "Ha habido un problema al traernos los users",
+        error,
+      });
     }
   },
 };
