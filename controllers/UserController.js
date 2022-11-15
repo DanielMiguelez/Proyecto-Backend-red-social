@@ -1,7 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { jwt_secret } = require("../config/keys.js");
+require("dotenv").config()
 
 const UserController = {
   async createUser(req, res) {
@@ -35,7 +35,7 @@ const UserController = {
           .status(400)
           .send({ message: "Usuario o contraseña incorrectos" });
       }
-      const token = jwt.sign({ id: user.id }, jwt_secret);
+      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
       Token.create({ token, UserId: user.id });
 
       res.send({ message: "Welcome " + user.name, user, token });
