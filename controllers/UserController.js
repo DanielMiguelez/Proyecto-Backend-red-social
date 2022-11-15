@@ -4,12 +4,12 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config()
 
 const UserController = {
-  async createUser(req, res) {
+  async createUser(req, res, next) {
     try {
-      const password = await bcrypt.hash(
-        req.body.password ? req.body.password : "",
-        10
-      );
+      let password;
+      if (req.body.password) {
+        password = await bcrypt.hash(req.body.password, 10);
+      }
       const user = await User.create({ ...req.body, password });
       res.status(201).send({ msg: "user succesfully created", user });
     } catch (error) {
@@ -18,28 +18,47 @@ const UserController = {
     }
   },
 
-  login(req, res) {
-    User.findOne({
-      where: {
+  async login(req, res) {
+    try {
+      const user = await User.findOne({
         email: req.body.email,
-      },
-    }).then((user) => {
-      if (!user) {
-        return res
-          .status(400)
-          .send({ message: "Usuario o contraseña incorrectos" });
-      }
-      const isMatch = bcrypt.compareSync(req.body.password, user.password);
-      if (!isMatch) {
-        return res
-          .status(400)
-          .send({ message: "Usuario o contraseña incorrectos" });
-      }
-      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
-      Token.create({ token, UserId: user.id });
+      });
+      const token = jwt.sign({ _id: user._id }, jwt_secret);
+      if (user.tokens.length > 4) user.tokens.shift();
+      user.tokens.push(token);
+      await user.save();
+      res.send({ message: "Welcome " + user.name, token });
+    } catch (error) {
+      console.error(error);
+    }
+  },
 
-      res.send({ message: "Welcome " + user.name, user, token });
-    });
+  async logout(req, res) {
+    try {
+      await User.findByIdAndUpdate(req.user._id, {
+        $pull: { tokens: req.headers.authorization },
+      });
+      res.send({ message: "Desconectado con éxito" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({
+        message: "Hubo un problema al intentar desconectar al usuario",
+      });
+    }
+  },
+  
+  async getInfo(req, res, ) {
+    try {
+      const user = await User.findById(req.user._id)
+
+        .populate({
+          path: "postIds",
+        })
+
+      res.send(user);
+    } catch (error) {
+      console.error(error);
+    }
   },
 };
 
