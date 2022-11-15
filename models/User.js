@@ -10,7 +10,7 @@ const UserSchema = new mongoose.Schema(
     email: {
       type: String,
       match: [/.+\@.+\..+/, "Este correo no es válido"],
-     unique: true,
+      unique: true,
       required: [true, "Por favor rellena tu correo"],
     },
     password: {
@@ -20,18 +20,20 @@ const UserSchema = new mongoose.Schema(
     age: {
       type: Number,
       required: [true, "Por favor rellena tu edad"],
-    },  
+    },
     tokens: [],
-    orderIds: [{ type: ObjectId, ref: "Order" }],
-    wishList: [{ type: ObjectId, ref: 'Post' }],
+    postIds: [{ type: ObjectId, ref: "Post" }],
+    commentIds: [{ type: ObjectId, ref: "Comment" }],
   },
   { timestamps: true }
 );
-UserSchema.index({
 
-    name: "text",
-    
-    });
+UserSchema.methods.toJSON = function () {
+  const user = this._doc;
+  delete user.tokens;
+  delete user.password;
+  return user;
+};
 
 const User = mongoose.model("User", UserSchema);
 

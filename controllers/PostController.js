@@ -4,8 +4,7 @@ const User = require("../models/User");
 const PostController = {
   async createPost(req, res, next) {
     try {
-      console.log(req.body);
-      const post = await Post.create(req.body);
+      const post = await Post.create({...req.body,userId:req.user._id});
       res.status(201).send(post);
     } catch (error) {
       console.error(error);
@@ -80,11 +79,28 @@ const PostController = {
     }
   },
 
+  async deleteLike(req, res) {
+    try {
+      const post = await Post.findByIdAndUpdate(
+        req.params._id,
+        { $pull: { likes: req.user._id } },
+        { new: true }
+      );
+      await User.findByIdAndUpdate(req.user._id, { new: true });
+
+      res.send(post);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: "There was a problem with your like" });
+    }
+  },
+
   async getAll(req, res) {
     try {
       const { page = 1, limit = 5 } = req.query;
       const post = await Post.find()
       .populate("comments.userId")
+        .populate("userId")
         .limit(limit)
         .skip((page - 1) * limit);
       res.send(post);
