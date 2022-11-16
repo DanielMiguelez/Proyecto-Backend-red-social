@@ -4,7 +4,10 @@ const User = require("../models/User");
 const PostController = {
   async createPost(req, res, next) {
     try {
-      const post = await Post.create({...req.body,userId:req.user._id});
+      const post = await Post.create({ ...req.body, userId: req.user._id });
+      await User.findByIdAndUpdate(req.user._id, {
+        $push: { postIds: post._id },
+      });
       res.status(201).send(post);
     } catch (error) {
       console.error(error);
@@ -99,7 +102,7 @@ const PostController = {
     try {
       const { page = 1, limit = 5 } = req.query;
       const post = await Post.find()
-      .populate("comments.userId")
+        .populate("comments.userId")
         .populate("userId")
         .limit(limit)
         .skip((page - 1) * limit);
@@ -108,7 +111,7 @@ const PostController = {
       console.error(error);
     }
   },
-  
+
   async insertComment(req, res) {
     try {
       const post = await Post.findByIdAndUpdate(
