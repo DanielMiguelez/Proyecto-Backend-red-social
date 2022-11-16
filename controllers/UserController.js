@@ -65,7 +65,7 @@ const UserController = {
     } catch (error) {
       console.error(error);
       res.status(500).send({
-        msg: "Ha habido un problema al traernosel user por Id",
+        msg: "Ha habido un problema al traernos el user por Id",
         error,
       });
     }
