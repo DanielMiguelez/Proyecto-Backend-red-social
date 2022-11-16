@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { post } = require("../routes/users");
 require("dotenv").config()
 
 const UserController = {
@@ -86,6 +87,7 @@ const UserController = {
       });
     }
   },
+  
 };
 
 module.exports = UserController;

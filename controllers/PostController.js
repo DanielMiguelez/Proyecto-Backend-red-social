@@ -1,6 +1,7 @@
 const Post = require("../models/Post");
 const User = require("../models/User");
 
+
 const PostController = {
   async createPost(req, res, next) {
     try {
@@ -102,7 +103,7 @@ const PostController = {
     try {
       const { page = 1, limit = 5 } = req.query;
       const post = await Post.find()
-        .populate("comments.userId")
+        //.populate("comments.userId")
         .populate("userId")
         .limit(limit)
         .skip((page - 1) * limit);
@@ -111,25 +112,20 @@ const PostController = {
       console.error(error);
     }
   },
-
-  async insertComment(req, res) {
+  /*async getInfoWithEverything(req, res,) {
     try {
-      const post = await Post.findByIdAndUpdate(
-        req.params._id,
-        {
-          $push: {
-            comments: { comment: req.body.comment, userId: req.user._id },
-          },
-        },
-        { new: true }
-      );
-      res.send(post);
+      const Post = await Post.findAll(req.user._id)
+        .populate({
+          path: "postIds"
+        })
+        .populate({
+          path: "commentIds"
+        })
+      res.send(Post,userIds,commentIds);
     } catch (error) {
       console.error(error);
-
-      res.status(500).send({ message: "There was a problem with the comment" });
     }
-  },
+  },*/
 };
 
 module.exports = PostController;
