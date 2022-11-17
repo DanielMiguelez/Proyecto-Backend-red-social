@@ -22,7 +22,7 @@ module.exports = {
         },
       },
     },
-        "/posts/getPostsById{_id}": {
+        "/posts/getPostsById/{_id}": {
       get: {
         tags: {
           Posts: "Get Posts by id",
@@ -34,7 +34,11 @@ module.exports = {
             name: "_id",
             in: "path",
             schema: {
-              $ref: "#/components/schemas/_id",
+                _id: {
+                    type: "objectId",
+                    description: "post identification ",
+                    example: "6201064b0028de7866e2b2c4",
+                  },
             },
           },
         ],
