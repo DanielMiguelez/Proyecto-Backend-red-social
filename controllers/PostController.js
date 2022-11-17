@@ -103,7 +103,7 @@ const PostController = {
     try {
       const { page = 1, limit = 5 } = req.query;
       const post = await Post.find()
-        //.populate("comments.userId")
+        .populate("commentIds")
         .populate("userId")
         .limit(limit)
         .skip((page - 1) * limit);
@@ -112,20 +112,6 @@ const PostController = {
       console.error(error);
     }
   },
-  /*async getInfoWithEverything(req, res,) {
-    try {
-      const Post = await Post.findAll(req.user._id)
-        .populate({
-          path: "postIds"
-        })
-        .populate({
-          path: "commentIds"
-        })
-      res.send(Post,userIds,commentIds);
-    } catch (error) {
-      console.error(error);
-    }
-  },*/
 };
 
 module.exports = PostController;

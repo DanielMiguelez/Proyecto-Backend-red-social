@@ -12,5 +12,4 @@ router.put('/likes/:_id', authentication, PostController.like);
 router.get('/getAll',PostController.getAll)
 router.put("/deleteLike/:_id",authentication, PostController.deleteLike)
 router.get("/getPostsById/:_id",PostController.getPostsById)
-//router.get("/getInfoWithEverything",authentication,PostController.getInfoWithEverything)
 module.exports = router;

@@ -5,8 +5,9 @@ const CommentController = {
     async createComment(req, res) {
       try {
         const comment = await Comment.create({ ...req.body, userId: req.user._id });
+        console.log(comment)
         await Post.findByIdAndUpdate(req.params._id, {
-          $push: {commentId: req.user._id },
+          $push: {commentIds: comment._id },
         });
         res.status(201).send(comment);
       } catch (error) {
