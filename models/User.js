@@ -21,6 +21,7 @@ const UserSchema = new mongoose.Schema(
       type: Number,
       required: [true, "Please fill in with your age"],
     },
+    role: String,
     tokens: [],
     postIds: [{ type: ObjectId, ref: "Post" }],
     commentIds: [{ type: ObjectId, ref: "Comment" }],

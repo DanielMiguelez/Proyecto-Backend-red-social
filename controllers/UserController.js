@@ -11,7 +11,7 @@ const UserController = {
       if (req.body.password) {
         password = await bcrypt.hash(req.body.password, 10);
       }
-      const user = await User.create({ ...req.body, password });
+      const user = await User.create({ ...req.body, password, role:"user" });
       res.status(201).send({ msg: "user succesfully created", user });
     } catch (error) {
       console.error(error);
@@ -28,7 +28,7 @@ const UserController = {
       if (user.tokens.length > 4) user.tokens.shift();
       user.tokens.push(token);
       await user.save();
-      res.send({ message: "Welcome " + user.name, token });
+      res.send({ message: "Welcome " + user.name, token, user });
     } catch (error) {
       console.error(error);
     }
