@@ -1,14 +1,18 @@
 const Comment = require("../models/Comment");
 const Post = require("../models/Post");
+const User = require("../models/User");
 
 const CommentController = {
     async createComment(req, res) {
       try {
         const comment = await Comment.create({ ...req.body, userId: req.user._id });
         console.log(comment)
-        await Post.findByIdAndUpdate(req.params._id, {
-          $push: {commentIds: comment._id },
+        await Post.findByIdAndUpdate(req.body.postIds,{
+          $push: {comment: comment._id },
         });
+        /*await User.findByIdAndUpdate(req.user.id, {
+          $push:{commentIds:comment._id}
+        });*/
         res.status(201).send(comment);
       } catch (error) {
         console.error(error)
